@@ -1,0 +1,35 @@
+<odoo>
+  <data>
+
+        <record id="digifactfel_view_company_form" model="ir.ui.view">
+            <field name="name">digifactfel.res.company.form</field>
+            <field name="model">res.company</field>
+	        <field name="inherit_id" ref="base.view_company_form"/>
+	        <field name="arch" type="xml">
+                    <page name="general_info" position="after">
+                        <page string="FEEL">
+                            <group string="Frases">
+                                <group>
+                                    <field name="usuario_digifact"/>
+                                    <field name="pass_digifact"/>
+                                    <field name="nit_digifactfel"/>
+                                    <field name="fel_prueba"/>
+                                    <field name="feel_codigo_exportador"/>
+                                    <field name="feel_logo"/>
+                                    <field name="feel_texto_logo"/>
+                                    <field name="feel_frase_ids">
+                                        <tree string="Frases" editable="bottom">
+                                            <field name="codigo"/>
+                                            <field name="frase"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+
+                        </page>
+                    </page>
+	        </field>
+	    </record>
+
+  </data>
+</odoo>
