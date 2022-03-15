@@ -1,0 +1,7 @@
+[
+    {
+        "code": 2001,
+        "message": "USERNAME_NOT_EXIST",
+        "description": "Por favor ingrese un NIT VÁLIDO!"
+    }
+]
