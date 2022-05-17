@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report
+            id="geducar_reporte_pago"
+            string="Pago"
+            model="account.payment"
+            report_type="qweb-pdf"
+            file="geducar.reporte_pago"
+            name="geducar.reporte_pago"
+        />
+
+    </data>
+</odoo>
