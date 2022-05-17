@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="reporte_libro_conciliacion_bancaria">
+            <t t-call="web.html_container">
+
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <center>
+                                <h4>Libro conciliación bancaria</h4> <br/><br/><br/>
+                            </center>
+                            <table class="table table-sm o_main_table">
+                                <tbody>
+                                    <tr>
+                                        <td><b>Cuenta</b></td>
+                                        <td><span t-esc="data['cuenta_id'][1]"/></td>
+                                        <td><b>Fecha inicio:</b></td>
+                                        <td><span t-esc="data['fecha_inicio']" t-options='{"widget": "date"}'/></td>
+                                        <td><b>Fecha fin:</b></td>
+                                        <td><span t-esc="data['fecha_fin']" t-options='{"widget": "date"}'/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <h6>Documentos</h6>
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Fecha</th>
+                                        <th  class="text-left">Doc</th>
+                                        <th  class="text-left">Beneficiario</th>
+                                        <th  class="text-left">Concepto</th>
+                                        <th  class="text-right">Credito</th>
+                                        <th  class="text-right">Debito</th>
+                                    </tr>
+                                </thead>
+                                <t t-if="documentos_conciliados(data)['documentos']">
+                                    <tbody>
+                                        <tr t-foreach="documentos_conciliados(data)['documentos']" t-as="m">
+                                            <td><span t-esc="m['fecha']" t-options='{"widget": "date"}'/></td>
+                                            <td><span t-esc="m['documento']"/></td>
+                                            <td><span t-esc="m['beneficiario']"/></td>
+                                            <td><span t-esc="m['concepto']"/></td>
+                                            <td class="text-right"><span t-esc="m['credito']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                            <td class="text-right"><span t-esc="m['debito']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                        </tr>
+                                    </tbody>
+                                </t>
+                            </table>
+
+                            <h6>Resumen de la concilación</h6>
+                            <t t-set="diferencia" t-value="(documentos_conciliados(data)['saldo_conciliado'] + saldo_inicial(data)) - data['saldo']"/>
+                            <table class="table table-sm o_main_table">
+                                <tbody>
+                                    <tr>
+                                        <td>(+) Saldo conciliado</td>
+                                        <td class="text-right"><span t-esc="documentos_conciliados(data)['saldo_conciliado'] + saldo_inicial(data)" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>(=) Total</td>
+                                        <td class="text-right"><span t-esc="documentos_conciliados(data)['saldo_conciliado'] + saldo_inicial(data)" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>(-) Saldo ingresado</td>
+                                        <td class="text-right"><span t-esc="data['saldo']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>(=) Diferencia</td>
+                                        <td class="text-right"><span t-esc="diferencia" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <br/>
+                            <br/>
+                            <t t-if="documentos_circulacion(data)">
+                                <h6>Documentos en circulación</h6>
+                                <table class="table table-sm o_main_table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Fecha</th>
+                                            <th  class="text-left">Doc</th>
+                                            <th  class="text-left">Beneficiario</th>
+                                            <th  class="text-left">Concepto</th>
+                                            <th  class="text-right">Credito</th>
+                                            <th  class="text-right">Debito</th>
+                                        </tr>
+                                    </thead>
+                                        <tbody>
+                                            <tr t-foreach="documentos_circulacion(data)" t-as="m">
+                                                <td><span t-esc="m['fecha']" t-options='{"widget": "date"}'/></td>
+                                                <td><span t-esc="m['documento']"/></td>
+                                                <td><span t-esc="m['beneficiario']"/></td>
+                                                <td><span t-esc="m['concepto']"/></td>
+                                                <td class="text-right"><span t-esc="m['credito']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                                <td class="text-right"><span t-esc="m['debito']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                            </tr>
+                                        </tbody>
+                                </table>
+                            </t>
+
+                            <div class="row mt32">
+                                <div class="col-xs-4">
+                                    <strong>Realizado Por: ___________________________</strong>
+                                </div>
+                                <div class="col-xs-4">
+                                </div>
+                                <div class="col-xs-4">
+                                    <strong>Revisado por: ___________________________</strong>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

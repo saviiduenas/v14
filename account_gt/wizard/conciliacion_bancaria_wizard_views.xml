@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="account_gt_conciliacion_bancaria_form_view">
+            <field name="name">account_gt.conciliacion_bancaria.wizard</field>
+            <field name="model">account_gt.conciliacion_bancaria.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Conciliacion">
+                    <group>
+                        <field name="fecha"/>
+                    </group>
+                    <footer>
+                        <button name="conciliar_con_banco" type="object" string="Conciliar" class="oe_highlight"/>
+                        <button name="desconciliar_con_banco" type="object" string="Desconciliar" class="oe_highlight"/>
+
+                        or
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_gt_conciliacion_bancaria" model="ir.actions.act_window">
+            <field name="name">Conciliacion bancaria</field>
+            <field name="res_model">account_gt.conciliacion_bancaria.wizard</field>
+            <!-- <field name="view_type">form</field>
+            <field name="view_mode">form</field> -->
+            <field name="view_id" ref="account_gt_conciliacion_bancaria_form_view"/>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="account.model_account_move_line" />
+        </record>
+
+
+        <!-- <act_window id="launch_account_gt_libro_bancos"
+                    name="Libro de bancos"
+                    binding_model="account.account"
+                    res_model="account_gt.libro_bancos.wizard"
+                    view_mode="form"
+                    target="new"/>
+
+        <menuitem action="launch_account_gt_libro_bancos" id="menu_reporte_libro_bancos" parent="account.menu_finance_reports"/> -->
+
+    </data>
+</odoo>

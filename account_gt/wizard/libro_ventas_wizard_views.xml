@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="account_gt_libro_ventas_form_view">
+            <field name="name">account_gt.libro_ventas.wizard</field>
+            <field name="model">account_gt.libro_ventas.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Libro de ventas">
+                    <group>
+                        <field name="fecha_inicio"/>
+                        <field name="fecha_fin"/>
+                    </group>
+                    <group>
+                        <field name="name" invisible="1"/>
+                        <field name="archivo" readonly="1" filename="name"/>
+                    </group>
+                    <footer>
+                        <button name="print_report" type="object" string="Generar" class="oe_highlight"/>
+                        <button name="print_report_excel" string="Reporte excel" type="object" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="launch_account_gt_libro_ventas"
+                    name="Libro de ventas"
+                    binding_model="account.account"
+                    res_model="account_gt.libro_ventas.wizard"
+                    view_mode="form"
+                    target="new"/>
+
+        <menuitem action="launch_account_gt_libro_ventas" id="menu_reporte_libro_ventas" parent="account.menu_finance_reports"/>
+
+    </data>
+</odoo>

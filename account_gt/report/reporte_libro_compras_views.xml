@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="reporte_libro_compras">
+            <t t-call="web.html_container">
+
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <center>
+                                <h4>Libro de compras y servicios</h4> <br/><br/><br/>
+                            </center>
+                            <table class="table table-sm o_main_table">
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Domicilio fiscal: </strong><span t-esc="env.company.partner_id.street"/></td>
+                                        <td><strong>Nombre comercial: </strong><span t-field="env.company.partner_id.name"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-sm o_main_table">
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Registro del: </strong></td>
+                                        <td><span t-esc="data['fecha_inicio']" t-options='{"widget": "date"}'/></td>
+                                        <td><strong>al:</strong></td>
+                                        <td><span t-esc="data['fecha_fin']" t-options='{"widget": "date"}'/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Documento</th>
+                                        <th>NIT</th>
+                                        <th>Proveedor</th>
+                                        <th class="text-right">Compras</th>
+                                        <th class="text-right">Compras exentos</th>
+                                        <th class="text-right">Servicios</th>
+                                        <th class="text-right">Servicios exentos</th>
+                                        <th class="text-right">Importacion</th>
+                                        <th class="text-right">Pequeño contribuyente</th>
+                                        <th class="text-right">IVA</th>
+                                        <th class="text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="_get_compras(data)['compras_lista']" t-as="linea">
+                                        <td><span t-esc="linea['fecha']" t-options='{"widget": "date"}'/></td>
+                                        <td><span t-esc="linea['documento']"/></td>
+                                        <td><span t-esc="linea['nit']"/></td>
+                                        <td><span t-esc="linea['proveedor']"/></td>
+                                        <td class="text-right"><span t-esc="linea['compra']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                        <td class="text-right"><span t-esc="linea['compra_exento']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+
+                                        <td class="text-right"><span t-esc="linea['servicio']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                        <td class="text-right"><span t-esc="linea['servicio_exento']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+
+                                        <td class="text-right"><span t-esc="linea['importacion']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                        <td class="text-right"><span t-esc="linea['pequenio']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+
+                                        <td class="text-right"><span t-esc="linea['iva']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                        <td class="text-right"><span t-esc="linea['total']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                    </tr>
+                                    <t t-set="t" t-value="_get_compras(data)['total']"/>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong><span t-esc="t['compra']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></strong></td>
+                                        <td class="text-right"><strong><span t-esc="t['compra_exento']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></strong></td>
+
+                                        <td class="text-right"><strong><span t-esc="t['servicio']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></strong></td>
+                                        <td class="text-right"><strong><span t-esc="t['servicio_exento']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></strong></td>
+
+                                        <td class="text-right"><strong><span t-esc="t['importacion']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></strong></td>
+                                        <td class="text-right"><strong><span t-esc="t['pequenio']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></strong></td>
+
+                                        <td class="text-right"><strong><span t-esc="t['iva']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></strong></td>
+                                        <td class="text-right"><strong><span t-esc="t['total']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Documentos operados:</strong></td>
+                                        <td class="text-right"><strong><span t-esc="_get_compras(data)['documentos_operados']"/></strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <t t-if="len(_get_compras(data)['gastos_no']) > 0">
+                                <p><strong>Gastos no deducibles</strong></p>
+                                <br/>
+                                <table class="table table-sm o_main_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Documento</th>
+                                            <th>NIT</th>
+                                            <th>Proveedor</th>
+                                            <th class="text-right">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="_get_compras(data)['gastos_no']" t-as="linea">
+                                            <td><span t-esc="linea['fecha']" t-options='{"widget": "date"}'/></td>
+                                            <td><span t-esc="linea['documento']"/></td>
+                                            <td><span t-esc="linea['nit']"/></td>
+                                            <td><span t-esc="linea['proveedor']"/></td>
+                                            <td class="text-right"><span t-esc="linea['total']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><strong>Total gastos no deducibles </strong></td>
+                                            <td class="text-right"><strong><span t-esc="_get_compras(data)['total_gastos_no']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </t>
+
+                            <!-- <h2 t-field="doc.name"/>
+                            <p>From <span t-field="doc.start_date"/> to <span t-field="doc.end_date"/></p>
+                            <h3>Attendees:</h3>
+                            <ul>
+                                <t t-foreach="doc.attendee_ids" t-as="attendee">
+                                    <li><span t-field="attendee.name"/></li>
+                                </t>
+                            </ul> -->
+                        </div>
+
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

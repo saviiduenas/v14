@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="account_gt_libro_conciliacion_bancaria_form_view">
+            <field name="name">account_gt.libro_conciliacion_bancaria.wizard</field>
+            <field name="model">account_gt.libro_conciliacion_bancaria.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Libro conciliacion bancaria">
+                    <group>
+                        <field name="fecha_inicio"/>
+                        <field name="fecha_fin"/>
+                        <field name="cuenta_id"/>
+                        <field name="saldo"/>
+                    </group>
+                    <footer>
+                        <button name="print_report" type="object" string="Generar" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="launch_account_gt_libro_conciliacion_bancaria"
+                    name="Libro conciliacion bancaria"
+                    binding_model="account.account"
+                    res_model="account_gt.libro_conciliacion_bancaria.wizard"
+                    view_mode="form"
+                    target="new"/>
+
+        <menuitem action="launch_account_gt_libro_conciliacion_bancaria" id="menu_reporte_libro_conciliacion_bancaria" parent="account.menu_finance_reports"/>
+
+    </data>
+</odoo>
