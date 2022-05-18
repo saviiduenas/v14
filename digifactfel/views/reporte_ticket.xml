@@ -39,7 +39,6 @@
                             <center>
                                 <span t-esc="o.invoice_date" t-options="{'widget': 'date'}"/> <br/>
                                 <span t-esc="o.partner_id.name"/> <br/>
-                                <span t-esc="o.partner_id.vat"/><br/>
                                 Dirección: <span t-esc="o.partner_id.company_id.street"/> <span t-esc="o.partner_id.company_id.street2"/> <br/>
                             </center>
                         </p>

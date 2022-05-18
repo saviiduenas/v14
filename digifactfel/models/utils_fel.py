@@ -1,23 +1,24 @@
 import base64
 import logging
-import sys
 from lxml import etree
 import urllib.request as urllib2
 import requests
 
 
 class DatosGeneralesModel:
-    def __init__(self, tipo, fechahoraemision, codigomoneda, numero_acceso=None, is_exportacion=False):
+    def __init__(self, tipo, fechahoraemision, codigomoneda, numero_acceso=None):
         self.tipo = tipo
         self.fechahoraemision = fechahoraemision
         self.codigomoneda = codigomoneda
         self.numero_acceso = numero_acceso
-        self.is_exportacion = is_exportacion
 
     def __str__(self):
-        return "DatosGeneralesModel(tipo={}, fechahoraemision={}, codigomoneda={}, numero_acceso={}, is_exportacion={})".format(
-            self.tipo, self.fechahoraemision, self.codigomoneda, self.numero_acceso, self.is_exportacion)
-
+        return "DatosGeneralesModel(tipo={}, fechahoraemision={}, codigomoneda={}, numero_acceso={})".format(
+            self.tipo,
+            self.fechahoraemision,
+            self.codigomoneda,
+            self.numero_acceso,
+        )
 
     def to_xml(self, owner, dte_ns):
         datos_generales = etree.SubElement(
@@ -28,13 +29,10 @@ class DatosGeneralesModel:
                 "FechaHoraEmision": self.fechahoraemision,
                 "CodigoMoneda": self.codigomoneda,
             },
-        )                  
+        )
+        # if numero
         if self.numero_acceso:
-            datos_generales.attrib["NumeroAcceso"] = self.numero_acceso
-        
-        if self.is_exportacion:
-            datos_generales.attrib["Exp"] = "SI"
-
+            datos_generales.attrib["Numero"] = self.numero_acceso
         return datos_generales
 
 
@@ -440,15 +438,13 @@ class TotalesModel:
 
 
 class ComplementoConfig:
-    def __init__(self, uri_complemento, nombre_complemento, id_complemento=None):
+    def __init__(self, uri_complemento, nombre_complemento):
         self.uri_complemento = uri_complemento
         self.nombre_complemento = nombre_complemento
-        self.id_complemento = id_complemento
-
 
     def __str__(self):
-        return "Uri complemento: {}, Nombre complemento: {}, Id complemento: {}".format(
-            self.uri_complemento, self.nombre_complemento, self.id_complemento
+        return "URI complemento: {}, Nombre complemento: {}".format(
+            self.uri_complemento, self.nombre_complemento
         )
 
 
@@ -496,71 +492,6 @@ class ReferenciasNotaConfig:
             nsmap=NSMAP_REF,
         )
 
-class ExportacionFields:
-    def __init__(
-        self,
-        nombre_consignatario_o_destinatario,
-        direccion_consignatario_o_destinatario,
-        codigo_consignatario_o_destinatario,
-        nombre_comprador,
-        direccion_comprador,
-        codigo_comprador,
-        otra_referencia,
-        incoterm,
-        nombre_exportador,
-        codigo_exportador,
-    ):
-        self.nombre_consignatario_o_destinatario = nombre_consignatario_o_destinatario
-        self.direccion_consignatario_o_destinatario = direccion_consignatario_o_destinatario
-        self.codigo_consignatario_o_destinatario = codigo_consignatario_o_destinatario
-        self.nombre_comprador = nombre_comprador
-        self.direccion_comprador = direccion_comprador
-        self.codigo_comprador = codigo_comprador
-        self.otra_referencia = otra_referencia
-        self.incoterm = incoterm
-        self.nombre_exportador = nombre_exportador
-        self.codigo_exportador = codigo_exportador
-
-    def __str__(self):
-        return "Nombre consignatario o destinatario: {}, Direccion consignatario o destinatario: {}, Codigo consignatario o destinatario: {}, Nombre comprador: {}, Direccion comprador: {}, Codigo comprador: {}, Otra referencia: {}, INCOTERM: {}, Nombre exportador: {}, Codigo exportador: {}".format(
-            self.nombre_consignatario_o_destinatario,
-            self.direccion_consignatario_o_destinatario,
-            self.codigo_consignatario_o_destinatario,
-            self.nombre_comprador,
-            self.direccion_comprador,
-            self.codigo_comprador,
-            self.otra_referencia,
-            self.incoterm,
-            self.nombre_exportador,
-            self.codigo_exportador,
-        )
-
-    def to_xml(self, owner):
-        NSMAP_EXP = {
-            "cex": "http://www.sat.gob.gt/face2/ComplementoExportaciones/0.1.0"
-        }
-
-        CEX_NS = "{http://www.sat.gob.gt/face2/ComplementoExportaciones/0.1.0}"
-
-        exportacion_tag = etree.SubElement(
-            owner,
-            CEX_NS + "Exportacion",
-            attrib={},
-            Version = "1",
-            nsmap=NSMAP_EXP,
-        )         
-
-        etree.SubElement(exportacion_tag, CEX_NS + "NombreConsignatarioODestinatario").text = self.nombre_consignatario_o_destinatario
-        etree.SubElement(exportacion_tag, CEX_NS + "DireccionConsignatarioODestinatario").text = self.direccion_consignatario_o_destinatario
-        etree.SubElement(exportacion_tag, CEX_NS + "CodigoConsignatarioODestinatario").text = str(self.codigo_consignatario_o_destinatario)
-        etree.SubElement(exportacion_tag, CEX_NS + "NombreComprador").text = self.nombre_comprador
-        etree.SubElement(exportacion_tag, CEX_NS + "DireccionComprador").text = self.direccion_comprador
-        etree.SubElement(exportacion_tag, CEX_NS + "CodigoComprador").text = self.codigo_comprador
-        etree.SubElement(exportacion_tag, CEX_NS + "OtraReferencia").text = self.otra_referencia
-        etree.SubElement(exportacion_tag, CEX_NS + "INCOTERM").text = self.incoterm
-        etree.SubElement(exportacion_tag, CEX_NS + "NombreExportador").text = self.nombre_exportador
-        etree.SubElement(exportacion_tag, CEX_NS + "CodigoExportador").text = self.codigo_exportador
-
 
 class ComplementoModel:
     def __init__(self, config, referencias_nota):
@@ -585,19 +516,14 @@ class ComplementoModel:
         )
 
     def to_xml(self, owner, dte_ns):
-        props_complemento = {
-            "URIComplemento": self.config.uri_complemento,
-            "NombreComplemento": self.config.nombre_complemento,
-        }
-
-        if self.config.id_complemento:
-            props_complemento["IDComplemento"] = self.config.id_complemento
-            
         complementos = etree.SubElement(owner, dte_ns + "Complementos")
         complemento = etree.SubElement(
             complementos,
             dte_ns + "Complemento",
-            attrib=props_complemento,
+            attrib={
+                "URIComplemento": self.config.uri_complemento,
+                "NombreComplemento": self.config.nombre_complemento,
+            },
         )
 
         for ref in self.referencias_nota:
@@ -605,40 +531,6 @@ class ComplementoModel:
 
         return complementos
 
-class ComplementoExportacionModel:
-    def __init__(self, config, exportacion):
-        if type(config) is not ComplementoConfig:
-            raise TypeError("config must be a ComplementoExportacionConfig")
-
-        if type(exportacion) is not ExportacionFields:
-            raise TypeError("exportacion must be a Exportacion")
-
-        self.config = config
-        self.exportacion = exportacion
-
-    def __str__(self):
-        return "Config: {}\nExportacion: {}".format(
-            self.config, self.exportacion
-        )
-
-    def to_xml(self, owner, dte_ns):
-        props_complemento = {
-            "URIComplemento": self.config.uri_complemento,
-            "NombreComplemento": self.config.nombre_complemento,
-        }
-
-        if self.config.id_complemento:
-            props_complemento["IDComplemento"] = self.config.id_complemento
-            
-        complementos = etree.SubElement(owner, dte_ns + "Complementos")
-        complemento = etree.SubElement(complementos,
-            dte_ns + "Complemento",
-            attrib=props_complemento,
-        )
-
-        self.exportacion.to_xml(complemento)
-
-        return complementos
 
 class FelType:
     def __init__(self, codigo, descripcion=None, is_beta=False):
@@ -676,7 +568,6 @@ class FEL:
         totales,
         login,
         complemento=None,
-        complemento_exportacion=None,
     ):
         if type(fel_type) is not FelType:
             raise TypeError("fel_type must be a FelType")
@@ -705,14 +596,9 @@ class FEL:
 
         if type(login) is not LoginModel:
             raise TypeError("login must be a LoginModel")
-        
-        if complemento_exportacion:
-            if type(complemento_exportacion) is not ComplementoExportacionModel:
-                raise TypeError("complemento_exportacion must be a ComplementoExportacionModel")
-            
 
         self.TYPES_WITH_COMPLEMENTO = ["NCRE", "NDEB"]
-        self.need_complent = (fel_type.codigo in self.TYPES_WITH_COMPLEMENTO)
+        self.need_complent = fel_type.codigo in self.TYPES_WITH_COMPLEMENTO
         self.complemento = None
 
         if complemento:
@@ -726,9 +612,6 @@ class FEL:
         else:
             if self.need_complent:
                 raise ValueError("complemento is required")
-        
-        if complemento_exportacion:
-            self.complemento_exportacion = complemento_exportacion
 
         self.fel_type = fel_type
         self.datos_generales = datos_generales
@@ -753,66 +636,56 @@ class FEL:
         )
 
     def to_xml(self):
-        try:
-            attr_qname = etree.QName(
-                "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation"
+        attr_qname = etree.QName(
+            "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation"
+        )
+        DTE_NS = "{http://www.sat.gob.gt/dte/fel/0.2.0}"
+
+        NSMAP = {
+            "ds": "http://www.w3.org/2000/09/xmldsig#",
+            "dte": "http://www.sat.gob.gt/dte/fel/0.2.0",
+            "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+        }
+        if self.fel_type.codigo in ["FACT"]:
+            NSMAP.pop("ds")
+            gt_document = etree.Element(
+                DTE_NS + "GTDocumento",
+                Version="0.1",
+                nsmap=NSMAP,
             )
-            DTE_NS = "{http://www.sat.gob.gt/dte/fel/0.2.0}"
-
-            NSMAP = {
-                "ds": "http://www.w3.org/2000/09/xmldsig#",
-                "dte": "http://www.sat.gob.gt/dte/fel/0.2.0",
-                "xsi": "http://www.w3.org/2001/XMLSchema-instance",
-            }
-            if self.fel_type.codigo in ["FACT"]:
-                NSMAP.pop("ds")
-                gt_document = etree.Element(
-                    DTE_NS + "GTDocumento",
-                    Version="0.1",
-                    nsmap=NSMAP,
-                )
-            else:
-                gt_document = etree.Element(
-                    DTE_NS + "GTDocumento",
-                    {attr_qname: "http://www.sat.gob.gt/dte/fel/0.1.0"},
-                    Version="0.1",
-                    nsmap=NSMAP,
-                )
-
-            sat = etree.SubElement(gt_document, DTE_NS + "SAT", ClaseDocumento="dte")
-            dte = etree.SubElement(sat, DTE_NS + "DTE", ID="DatosCertificados")
-            datos_emision = etree.SubElement(
-                dte, DTE_NS + "DatosEmision", ID="DatosEmision"
+        else:
+            gt_document = etree.Element(
+                DTE_NS + "GTDocumento",
+                {attr_qname: "http://www.sat.gob.gt/dte/fel/0.1.0"},
+                Version="0.1",
+                nsmap=NSMAP,
             )
-            self.datos_generales.to_xml(datos_emision, DTE_NS)
-            self.emisor.to_xml(datos_emision, DTE_NS)
-            self.receptor.to_xml(datos_emision, DTE_NS)
 
-            if self.fel_type.codigo not in ["NCRE", "NDEB"]:
-                self.frases.to_xml(datos_emision, DTE_NS)
+        sat = etree.SubElement(gt_document, DTE_NS + "SAT", ClaseDocumento="dte")
+        dte = etree.SubElement(sat, DTE_NS + "DTE", ID="DatosCertificados")
+        datos_emision = etree.SubElement(
+            dte, DTE_NS + "DatosEmision", ID="DatosEmision"
+        )
+        self.datos_generales.to_xml(datos_emision, DTE_NS)
+        self.emisor.to_xml(datos_emision, DTE_NS)
+        self.receptor.to_xml(datos_emision, DTE_NS)
 
-            items_tag = etree.SubElement(datos_emision, DTE_NS + "Items")
-            for item in self.items:
-                item.to_xml(items_tag, DTE_NS)
+        if self.fel_type.codigo not in ["NCRE", "NDEB"]:
+            self.frases.to_xml(datos_emision, DTE_NS)
 
-            self.totales.to_xml(datos_emision, DTE_NS)
+        items_tag = etree.SubElement(datos_emision, DTE_NS + "Items")
+        for item in self.items:
+            item.to_xml(items_tag, DTE_NS)
 
-            if self.need_complent:
-                self.complemento.to_xml(datos_emision, DTE_NS)
-            
-            if self.complemento_exportacion:
-                self.complemento_exportacion.to_xml(datos_emision, DTE_NS)
+        self.totales.to_xml(datos_emision, DTE_NS)
 
-            xmls = etree.tostring(gt_document, encoding="UTF-8")
-            xmls = xmls.decode("utf-8").replace("&", "&amp;").encode("utf-8")
-            xmls_base_64 = base64.b64encode(xmls)
-            return xmls, xmls_base_64
-        except Exception as e:
-            line = sys.exc_info()[-1].tb_lineno
-            logging.info("=======================================================")
-            raise Exception(
-                "Error in line {}: {}".format(line, str(e))
-            ) from e             
+        if self.need_complent:
+            self.complemento.to_xml(datos_emision, DTE_NS)
+
+        xmls = etree.tostring(gt_document, encoding="UTF-8")
+        xmls = xmls.decode("utf-8").replace("&", "&amp;").encode("utf-8")
+        xmls_base_64 = base64.b64encode(xmls)
+        return xmls, xmls_base_64
 
     def internet_on(self):
         try:
@@ -845,74 +718,63 @@ class FEL:
 
     def send_xml(self):
         if self.internet_on():
-            try:
-                token = self.get_token()
-                url = f"https://felgttestaws.digifact.com.gt/felapiv2/api/FelRequest?NIT={self.login.nit}&TIPO=CERTIFICATE_DTE_XML_TOSIGN&FORMAT=PDF"
+            token = self.get_token()
+            url = f"https://felgttestaws.digifact.com.gt/felapiv2/api/FelRequest?NIT={self.login.nit}&TIPO=CERTIFICATE_DTE_XML_TOSIGN&FORMAT=PDF"
 
-                if not self.fel_type.is_beta:
-                    url = f"https://felgtaws.digifact.com.gt/gt.com.fel.api.v2/api/FELRequest?NIT={self.login.nit}&TIPO=CERTIFICATE_DTE_XML_TOSIGN&FORMAT=PDF"
-                             
-                headers = {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "Authorization": f"{token}",
-                }
+            if not self.fel_type.is_beta:
+                url = f"https://felgtaws.digifact.com.gt/gt.com.fel.api.v2/api/FELRequest?NIT={self.login.nit}&TIPO=CERTIFICATE_DTE_XML_TOSIGN&FORMAT=PDF"
 
-                xmls, xmls_base_64 = self.to_xml()
-                logging.info("xmls enviando!")
-                logging.info(xmls)
+            headers = {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": f"{token}",
+            }
 
-                response = requests.post(url, data=xmls, headers=headers, verify=False)
-                response_json = response.json()
+            xmls, xmls_base_64 = self.to_xml()
+            logging.info("xmls enviando!")
+            logging.info(xmls)
 
-                logging.info("response_json")
-                logging.info(response_json)
+            response = requests.post(url, data=xmls, headers=headers, verify=False)
+            response_json = response.json()
 
-                if response_json:
-                    codigo = response_json["Codigo"]
-                    if codigo == 1:
-                        acuse_recibo_sat = response_json["AcuseReciboSAT"]
-                        codigo_sat = response_json["CodigosSAT"]
-                        response_data_1 = response_json["ResponseDATA1"]
-                        response_data_2 = response_json["ResponseDATA2"]
-                        response_data_3 = response_json["ResponseDATA3"]
-                        numero_autorizacion = response_json["Autorizacion"]
-                        serie = response_json["Serie"]
-                        numero = response_json["NUMERO"]
-                        back_procesor = response_json["BACKPROCESOR"]
-                        return {
-                            "acuse_recibo_sat": acuse_recibo_sat,
-                            "codigo_sat": codigo_sat,
-                            "formato_xml": response_data_1,
-                            "formato_html": response_data_2,
-                            "formato_pdf": response_data_3,
-                            "numero_autorizacion": numero_autorizacion,
-                            "serie": serie,
-                            "numero": numero,
-                            "back_procesor": back_procesor,
-                        }
-                    else:
-                        mensaje_error = response_json["Mensaje"]
-                        raise Exception(
-                            "Error al enviar el documento. Codigo de error: {}. Mensaje: {}".format(
-                                codigo, mensaje_error
-                            )
-                        )
+            logging.info("response_json")
+            logging.info(response_json)
+
+            if response_json:
+                codigo = response_json["Codigo"]
+                if codigo == 1:
+                    acuse_recibo_sat = response_json["AcuseReciboSAT"]
+                    codigo_sat = response_json["CodigosSAT"]
+                    response_data_1 = response_json["ResponseDATA1"]
+                    response_data_2 = response_json["ResponseDATA2"]
+                    response_data_3 = response_json["ResponseDATA3"]
+                    numero_autorizacion = response_json["Autorizacion"]
+                    serie = response_json["Serie"]
+                    numero = response_json["NUMERO"]
+                    back_procesor = response_json["BACKPROCESOR"]
+                    return {
+                        "acuse_recibo_sat": acuse_recibo_sat,
+                        "codigo_sat": codigo_sat,
+                        "formato_xml": response_data_1,
+                        "formato_html": response_data_2,
+                        "formato_pdf": response_data_3,
+                        "numero_autorizacion": numero_autorizacion,
+                        "serie": serie,
+                        "numero": numero,
+                        "back_procesor": back_procesor,
+                    }
                 else:
+                    mensaje_error = response_json["Mensaje"]
                     raise Exception(
-                        "Error al enviar el xml. Codigo de error: {}".format(
-                            response.status_code
+                        "Error al enviar el documento. Codigo de error: {}. Mensaje: {}".format(
+                            codigo, mensaje_error
                         )
                     )
-            except Exception as e:
-                logging.error(e)                 
-                line = sys.exc_info()[2].tb_lineno
-                logging.info("-*=====================================")
-                logging.info("EL ERROR ESTA DENTRO DE UTILS-FL.PY")
-                logging.error(line)
-                logging.info("-*=====================================")
+            else:
                 raise Exception(
-                    "Error al enviar el xml. Codigo de error: {}".format(e)
-                )                                 
+                    "Error al enviar el xml. Codigo de error: {}".format(
+                        response.status_code
+                    )
+                )
         else:
             raise Exception("No hay conexion a internet")

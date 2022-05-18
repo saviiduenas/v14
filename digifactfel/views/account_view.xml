@@ -21,8 +21,6 @@
                             <group>
                                 <field name="producto_descripcion"/>
                                 <field name="descripcion_factura"/>
-                                <field name="direccion_sucursal"/>
-                                <field name="telefono"/>
                             </group>
                         </group>
                     </page>

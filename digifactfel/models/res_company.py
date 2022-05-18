@@ -22,7 +22,6 @@ class ResCompany(models.Model):
     pass_digifact = fields.Char('Contraseña digifact')
     fel_prueba = fields.Boolean('Fel prueba')
     feel_codigo_exportador = fields.Char('Codigo exportador')
-    certificador = fields.Char('Certificador', default="DIGIFACT")
     feel_logo = fields.Binary('Logo fel')
     feel_texto_logo = fields.Char('Texto logo fel')
     # feel_codigo_establecimiento = fields.Char('Codigo de establecimiento')

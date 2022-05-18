@@ -2,7 +2,6 @@
 
 from odoo import api, models, fields
 import re
-#import odoo.addons.l10n_gt_extra.a_letras
 import logging
 from datetime import date
 import datetime
