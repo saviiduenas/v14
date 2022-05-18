@@ -907,6 +907,10 @@ class AccountMove(models.Model):
                     frases_list = []
                     for frase in factura.company_id.feel_frase_ids:
                         tipo_frase = frase.frase
+
+                        if int(tipo_frase) == 4 and not is_exportacion:
+                            continue
+
                         codigo_escenario = frase.codigo
                         frase_config = FraseConfig(
                             tipo_frase=tipo_frase, codigo_escenario=codigo_escenario
