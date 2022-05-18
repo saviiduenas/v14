@@ -40,3 +40,5 @@ class AccountJournal(models.Model):
     feel_nombre_comercial = fields.Char('Nombre comercial')
     producto_descripcion = fields.Boolean('Producto + descripcion')
     descripcion_factura = fields.Boolean('Descripcion factura')
+    direccion_sucursal = fields.Char('Dirección')
+    telefono = fields.Char('Teléfono')
