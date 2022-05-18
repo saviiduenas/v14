@@ -727,8 +727,7 @@ class FEL:
             if self.need_complent:
                 raise ValueError("complemento is required")
         
-        if complemento_exportacion:
-            self.complemento_exportacion = complemento_exportacion
+        self.complemento_exportacion = complemento_exportacion
 
         self.fel_type = fel_type
         self.datos_generales = datos_generales
