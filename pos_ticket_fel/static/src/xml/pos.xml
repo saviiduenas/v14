@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+  <xpath expr="//*[@class='pos-receipt']" position="attributes">
+      <attribute name="style">
+          position: relative; left: 1.2em; font-size: 150%; zoom: 90%;
+      </attribute>
+  </xpath>
+
+  <t t-extend="PosTicket">
+      <t t-jquery=".pos-receipt-contact" t-operation="before">
+        <br/>
+        <div id="qrcode"></div>
+        <script type="text/javascript">
+        new QRCode(document.getElementById("qrcode"), "http://jindo.dev.naver.com/collie");
+        </script>
+        <!-- <div class="recibo-fel">
+            <t t-esc="nombre_diario"/><br/>
+            <t t-esc="direccion"/><br/>
+            NIT: <t t-esc="receipt.company.vat"/><br/>
+            <t t-if="feel_serie">
+                Documento Tributario Electrónico FEL<br/>
+                Factura Electrónica<br/>
+                Serie: <t t-esc="feel_serie || ''"/><br/>
+                Número: <t t-esc="feel_numero || ''"/><br/>
+            </t>
+            <br/>
+            <div class="ticket_cliente">
+                Fecha: <t t-esc="receipt.date.localestring"/><br/>
+                Empleado: <t t-esc="receipt.cashier"/><br/>
+                <br/>
+                NIT: <t t-esc="order.get_client().vat ? order.get_client().vat : 'CF'"/><br/>
+                Nombre: <t t-esc="receipt.client"/><br/>
+                Dirección: <t t-esc="order.get_client().street"/><br/><br/>
+            </div>
+        </div> -->
+      </t>
+      <!-- <t t-jquery=".receipt-change" t-operation="after">
+          <br/>
+          <div class="info_certificador">
+              Certificador<br/>
+              DIGIFACT, S.A.<br/>
+              NIT: 77454820<br/>
+          </div>
+          <div class="info_certificacion">
+              <t t-if="feel_uuid">
+                  Autorización: <t t-esc="feel_numero_autorizacion || ''"/><br/>
+                  Fecha Certificación: <t t-esc="order.formatted_validation_date"/>
+              </t>
+              Sujeto a pagos trimestrales ISR<br/>
+        </div>
+      </t> -->
+  </t>
+
+</templates>

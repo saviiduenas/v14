@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="assets" inherit_id="point_of_sale.assets">
+            <xpath expr="//link[@id='pos-stylesheet']" position="after">
+                <link rel="stylesheet" href="/pos_ticket_fel/static/src/css/pos_ticket_fel.css"/>
+            </xpath>
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_ticket_fel/static/src/js/qrcode.js"></script>
+                <script type="text/javascript" src="/pos_ticket_fel/static/src/js/Screens/ReceiptScreen/OrderReceipt.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

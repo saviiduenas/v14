@@ -1,0 +1,10 @@
+/* --- POS TICKET FEL Specific CSS --- */
+
+/* #qrcode {
+  border: red 2px solid;
+} */
+
+#qrcode img {
+    width: 50%;
+   /* Styles goes here */
+}

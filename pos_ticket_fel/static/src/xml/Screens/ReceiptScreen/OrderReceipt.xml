@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="replace">
+            <!-- <t t-esc="state.nombre_diario"/><br/>
+            <t t-esc="state.direccion"/><br/> -->
+            <t t-if="state.acceso">
+                <center>
+                    Documento en contingencia<br/>
+                    <b>Factura</b><br/>
+                    <b>Número de acceso : <t t-esc="state.acceso"/></b><br/>
+                </center>
+            </t>
+            <center>
+                <t t-esc="state.nombre_comercial"/><br/>
+                <t t-esc="state.direccion"/><br/>
+                NIT: <t t-esc="receipt.company.vat"/><br/>
+                <t t-if="receipt.company.company_registry">
+                    <t t-esc="receipt.company.company_registry"/>
+                </t>
+            </center>
+            <br/>
+
+            <t t-if="state.feel_serie">
+                Documento Tributario Electrónico FEL<br/>
+                Factura Electrónica<br/>
+                Serie: <t t-esc="state.feel_serie || ''"/><br/>
+                Número: <t t-esc="state.feel_numero || ''"/><br/>
+            </t>
+            <br/>
+            <div class="ticket_cliente">
+                Fecha: <t t-esc="receipt.date.localestring"/><br/>
+                Empleado: <t t-esc="receipt.cashier"/><br/>
+                <br/>
+                NIT: <t t-esc="receipt.client.vat ? receipt.client.vat : 'CF'"/><br/>
+                Nombre: <t t-esc="receipt.client.name"/><br/>
+                Dirección: <t t-esc="receipt.client.street ? receipt.client.street : 'Guatemala'"/><br/><br/>
+            </div>
+
+        </xpath>
+        <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="before">
+
+            <br/>
+            <div class="info_certificacion">
+                <t t-if="state.feel_numero_autorizacion">
+                  <center>
+                      <div id="qrcode"></div>
+                      <script type="text/javascript">
+                        var qr_string = "<t t-esc="state.qr_string"/>";
+                        new QRCode(document.getElementById("qrcode"), qr_string);
+                      </script>
+
+
+                      <t t-if="state.certificador == 'INFILE'">
+                          <div class="info_certificador">
+                              Certificador<br/>
+                              INFILE, S.A.<br/>
+                              NIT: 12521337<br/>
+                          </div>
+                      </t>
+                      <t t-else="">
+                          <div class="info_certificador">
+                              Certificador<br/>
+                              DIGIFACT, S.A.<br/>
+                              NIT: 77454820<br/>
+                          </div>
+                      </t>
+
+
+                        Autorización: <t t-esc="state.feel_numero_autorizacion || ''"/><br/>
+                        Fecha Certificación: <t t-esc="receipt.date.localestring"/>
+                  </center>
+                </t>
+                <t t-if="state.acceso">
+                    <center>
+                        Emisión en contingencia, obtenga su DTE certificado en el sitio web:<br/>
+                        https://portal.sat.gob.gt/portal/verificador-publico-de-dte/
+                    </center>
+                </t>
+                <t t-else="">
+                    <center>Sujeto a pagos trimestrales ISR</center><br/>
+                </t>
+          </div>
+        </xpath>
+    </t>
+
+</templates>
