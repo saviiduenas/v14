@@ -1161,7 +1161,7 @@ class AccountMove(models.Model):
             logging.info("***************************************")
             raise UserError(
                 _(
-                    "No se pudo enviar la factura. Por favor verifique que los datos de la empresa sean correctos."
+                    "No se pudo enviar la factura. Por favor verifique que los datos de la empresa sean correctos y que la factura no haya sido enviada anteriormente."
                 )
             )
 
