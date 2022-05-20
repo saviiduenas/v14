@@ -803,7 +803,7 @@ class FEL:
                 self.complemento_exportacion.to_xml(datos_emision, DTE_NS)
 
             xmls = etree.tostring(gt_document, encoding="UTF-8")
-            xmls = xmls.decode("utf-8").enconde("utf-8")
+            # xmls = xmls.decode("utf-8").enconde("utf-8")
             # xmls = xmls.decode("utf-8").replace("&", "&amp;").encode("utf-8")
             xmls_base_64 = base64.b64encode(xmls)
             return xmls, xmls_base_64

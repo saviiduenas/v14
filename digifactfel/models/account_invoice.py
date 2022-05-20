@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from distutils.log import fatal
 import sys
-from odoo.tools.float_utils import float_round as round
 from odoo import fields, models, _
 import requests
 import logging
