@@ -577,23 +577,14 @@ class AbonoFields:
         )
 
     def to_xml(self, owner):
-        NSMAP_ABONO = {
-            "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0"
-        }
-
-        CAB_NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0\u0020GT_Complemento_Cambiaria-0.1.0.xsd}"
-
         abono_tag = etree.SubElement(
             owner,
-            CAB_NS + "Abono",
-            attrib={},
-            Version = "1",
-            nsmap=NSMAP_ABONO,
+            "Abono",
         )
 
-        etree.SubElement(abono_tag, CAB_NS + "NumeroAbono").text = str(self.numero_abono)
-        etree.SubElement(abono_tag, CAB_NS + "FechaVencimiento").text = self.fecha_vencimiento
-        etree.SubElement(abono_tag, CAB_NS + "MontoAbono").text = str(self.monto_abono)
+        etree.SubElement(abono_tag, "NumeroAbono").text = str(self.numero_abono)
+        etree.SubElement(abono_tag, "FechaVencimiento").text = self.fecha_vencimiento
+        etree.SubElement(abono_tag, "MontoAbono").text = str(self.monto_abono)
 
 
 
@@ -615,9 +606,17 @@ class ComplementoAbono:
             props_complemento["IDComplemento"] = self.config.id_complemento
             
         complementos = etree.SubElement(owner, dte_ns + "Complementos")
+
+        dte_ns = {
+            "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0"
+        }
+
+        CAB_NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd}"
+
         complemento = etree.SubElement(complementos,
-            dte_ns + "Complemento",
+            CAB_NS + "Complemento",            
             attrib=props_complemento,
+            nsmap=dte_ns,
         )
 
         abonos_factura_cambiaria = etree.SubElement(complemento,
