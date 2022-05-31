@@ -1121,7 +1121,7 @@ class AccountMove(models.Model):
 
                         fecha_vencimiento = str(factura.invoice_date + datetime.timedelta(days=dias)) if dias else str(fecha_hora_emision)
                         abono_fields = AbonoFields('1', fecha_vencimiento, gran_total)
-                        complemento_abono = ComplementoAbono(config=complemento_config, abono=[abono_fields])                        
+                        complemento_abono = ComplementoAbono(config=complemento_config, abonos=[abono_fields])                        
 
 
                     login = LoginModel(
