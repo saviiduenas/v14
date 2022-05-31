@@ -562,6 +562,74 @@ class ExportacionFields:
         etree.SubElement(exportacion_tag, CEX_NS + "CodigoExportador").text = self.codigo_exportador
 
 
+class AbonoFields:
+    # numero_abono, fecha_vencimiento, monto_abono
+    def __init__(self, numero_abono, fecha_vencimiento, monto_abono):
+        self.numero_abono = numero_abono
+        self.fecha_vencimiento = fecha_vencimiento
+        self.monto_abono = monto_abono
+
+    def __str__(self):
+        return "Numero abono: {}, Fecha vencimiento: {}, Monto abono: {}".format(
+            self.numero_abono,
+            self.fecha_vencimiento,
+            self.monto_abono,
+        )
+
+    def to_xml(self, owner):
+        NSMAP_ABONO = {
+            "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0"
+        }
+
+        CAB_NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd}"
+
+        abono_tag = etree.SubElement(
+            owner,
+            CAB_NS + "Abono",
+            attrib={},
+            Version = "1",
+            nsmap=NSMAP_ABONO,
+        )
+
+        etree.SubElement(abono_tag, CAB_NS + "NumeroAbono").text = str(self.numero_abono)
+        etree.SubElement(abono_tag, CAB_NS + "FechaVencimiento").text = self.fecha_vencimiento
+        etree.SubElement(abono_tag, CAB_NS + "MontoAbono").text = str(self.monto_abono)
+
+
+
+class ComplementoAbono:
+    def __init__(self, config, abonos):
+        self.config = config
+        self.abonos = abonos
+
+    def __str__(self):
+        return "Config: {}, Abonos: {}".format(self.config, self.abonos)
+
+    def to_xml(self, owner, dte_ns):
+        props_complemento = {
+            "URIComplemento": self.config.uri_complemento,
+            "NombreComplemento": self.config.nombre_complemento,
+        }
+
+        if self.config.id_complemento:
+            props_complemento["IDComplemento"] = self.config.id_complemento
+            
+        complementos = etree.SubElement(owner, dte_ns + "Complementos")
+        complemento = etree.SubElement(complementos,
+            dte_ns + "Complemento",
+            attrib=props_complemento,
+        )
+
+        abonos_factura_cambiaria = etree.SubElement(complemento,
+            dte_ns + "AbonosFacturaCambiaria",
+            Version = "1",             
+        )
+
+        for abono in self.abonos:
+            abono.to_xml(abonos_factura_cambiaria)
+
+
+
 class ComplementoModel:
     def __init__(self, config, referencias_nota):
         if type(config) is not ComplementoConfig:
@@ -677,6 +745,7 @@ class FEL:
         login,
         complemento=None,
         complemento_exportacion=None,
+        complemento_abono=None,
     ):
         if type(fel_type) is not FelType:
             raise TypeError("fel_type must be a FelType")
@@ -709,6 +778,10 @@ class FEL:
         if complemento_exportacion:
             if type(complemento_exportacion) is not ComplementoExportacionModel:
                 raise TypeError("complemento_exportacion must be a ComplementoExportacionModel")
+        
+        if complemento_abono:
+            if type(complemento_abono) is not ComplementoAbono:
+                raise TypeError("complemento_abono must be a ComplementoAbonoModel")                
             
 
         self.TYPES_WITH_COMPLEMENTO = ["NCRE", "NDEB"]
@@ -728,6 +801,7 @@ class FEL:
                 raise ValueError("complemento is required")
         
         self.complemento_exportacion = complemento_exportacion
+        self.complemento_abono = complemento_abono
 
         self.fel_type = fel_type
         self.datos_generales = datos_generales
@@ -801,6 +875,9 @@ class FEL:
             
             if self.complemento_exportacion:
                 self.complemento_exportacion.to_xml(datos_emision, DTE_NS)
+            
+            if self.complemento_abono:
+                self.complemento_abono.to_xml(datos_emision, DTE_NS)
 
             xmls = etree.tostring(gt_document, encoding="UTF-8")
             # xmls = xmls.decode("utf-8").enconde("utf-8")

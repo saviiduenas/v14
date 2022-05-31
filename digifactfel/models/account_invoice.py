@@ -789,6 +789,8 @@ class AccountMove(models.Model):
                     and factura.tipo_factura == "exportacion"
                     )
 
+                    is_cambiaria = tipo == "FCAM"
+
                     fel_type = FelType(tipo)
                     if not fel_type:
                         raise UserError(
@@ -1022,6 +1024,7 @@ class AccountMove(models.Model):
 
                     complemento = None
                     complemento_exportacion = None
+                    complemento_abono = None
                     
 
                     if is_exportacion:
@@ -1109,6 +1112,13 @@ class AccountMove(models.Model):
                                 referencias_nota=[referencias_nota],
                             )
 
+                    if is_cambiaria:
+                        complemento_config = ComplementoConfig(uri_complemento="cfc", nombre_complemento="FCAMB", id_complemento="ID")
+                        fecha_vencimiento = str(factura.date_due) if factura.date_due else str(fecha_hora_emision)
+                        abono_fields = AbonoFields('1', fecha_vencimiento, gran_total)
+                        complemento_abono = ComplementoAbono(config=complemento_config, abono=[abono_fields])                        
+
+
                     login = LoginModel(
                         username=str(factura.company_id.usuario_digifact),
                         password=str(factura.company_id.pass_digifact),
@@ -1125,7 +1135,8 @@ class AccountMove(models.Model):
                         totales=totales,
                         login=login,
                         complemento=complemento,
-                        complemento_exportacion=complemento_exportacion
+                        complemento_exportacion=complemento_exportacion,
+                        complemento_abono=complemento_abono,
                     )
 
                     response = obj.send_xml()
