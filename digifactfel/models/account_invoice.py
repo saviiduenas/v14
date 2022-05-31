@@ -1115,10 +1115,10 @@ class AccountMove(models.Model):
                     if is_cambiaria:
                         complemento_config = ComplementoConfig(uri_complemento="cfc", nombre_complemento="FCAMB", id_complemento="ID")
                         dias = 0
-                        if factura.invovice_payment_term_id:
-                            if len(factura.invovice_payment_term_id.line_ids) > 1:
-                                dias = factura.invovice_payment_term_id.line_ids[0].days
-                                                         
+                        if factura.invoice_payment_term_id:
+                            if len(factura.invoice_payment_term_id.line_ids) > 1:
+                                dias = factura.invoice_payment_term_id.line_ids[0].days
+
                         fecha_vencimiento = str(factura.invoice_date + datetime.timedelta(days=dias)) if dias else str(fecha_hora_emision)
                         abono_fields = AbonoFields('1', fecha_vencimiento, gran_total)
                         complemento_abono = ComplementoAbono(config=complemento_config, abono=[abono_fields])                        
