@@ -610,7 +610,7 @@ class ComplementoAbono:
             "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0"
         }
 
-        CAB_NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd}"
+        CAB_NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0_GT_Complemento_Cambiaria-0.1.0.xsd}"
 
         complemento = etree.SubElement(complementos,
             CAB_NS + "Complemento",            
