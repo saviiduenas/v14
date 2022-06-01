@@ -618,13 +618,11 @@ class ComplementoAbono:
             "xsi": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd",
         }
         
+        props_complemento["xsi:schemaLocation"] = "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd"
 
         complemento = etree.SubElement(
             complementos,
-            dte_ns + "Complemento",
-            {
-                attr_qname: "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd",
-            },
+            dte_ns + "Complemento",             
             attrib=props_complemento,
             nsmap=NSMAP_,             
         )
