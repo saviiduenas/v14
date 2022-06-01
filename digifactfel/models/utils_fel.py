@@ -562,8 +562,7 @@ class ExportacionFields:
         etree.SubElement(exportacion_tag, CEX_NS + "CodigoExportador").text = self.codigo_exportador
 
 
-class AbonoFields:
-    # numero_abono, fecha_vencimiento, monto_abono
+class AbonoFields:     
     def __init__(self, numero_abono, fecha_vencimiento, monto_abono):
         self.numero_abono = numero_abono
         self.fecha_vencimiento = fecha_vencimiento
@@ -611,7 +610,7 @@ class ComplementoAbono:
             "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0"
         }
 
-        CAB_NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd}"
+        CAB_NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0\u0020GT_Complemento_Cambiaria-0.1.0.xsd}"
 
         complemento = etree.SubElement(complementos,
             CAB_NS + "Complemento",            
