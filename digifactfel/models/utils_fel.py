@@ -609,15 +609,22 @@ class ComplementoAbono:
 
         NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0}"
 
+        attr_qname = etree.QName(
+                "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation"
+        )
+
         NSMAP_ = {
-            "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0",
-            "xsi": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0_GT_Complemento_Cambiaria-0.1.0.xsd",
+            "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0",             
+            "xsi": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd",
         }
         
 
         complemento = etree.SubElement(
             complementos,
             dte_ns + "Complemento",
+            {
+                attr_qname: "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd",
+            },
             attrib=props_complemento,
             nsmap=NSMAP_,             
         )
