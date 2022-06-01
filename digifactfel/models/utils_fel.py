@@ -606,20 +606,21 @@ class ComplementoAbono:
             
         complementos = etree.SubElement(owner, dte_ns + "Complementos")
 
-        dte_ns = {
+        NSMAP_ = {
             "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0"
         }
 
-        CAB_NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0_GT_Complemento_Cambiaria-0.1.0.xsd}"
+        NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0_GT_Complemento_Cambiaria-0.1.0.xsd}"
 
-        complemento = etree.SubElement(complementos,
-            CAB_NS + "Complemento",            
+        complemento = etree.SubElement(
+            complementos,
+            NS + "Complemento",
             attrib=props_complemento,
-            nsmap=dte_ns,
+            nsmap=NSMAP_,
         )
 
         abonos_factura_cambiaria = etree.SubElement(complemento,
-            dte_ns + "AbonosFacturaCambiaria",
+            NS + "AbonosFacturaCambiaria",
             Version = "1",             
         )
 
