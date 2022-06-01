@@ -536,11 +536,11 @@ class ExportacionFields:
         )
 
     def to_xml(self, owner):
+        CEX_NS = "{http://www.sat.gob.gt/face2/ComplementoExportaciones/0.1.0}"
+        
         NSMAP_EXP = {
             "cex": "http://www.sat.gob.gt/face2/ComplementoExportaciones/0.1.0"
-        }
-
-        CEX_NS = "{http://www.sat.gob.gt/face2/ComplementoExportaciones/0.1.0}"
+        }        
 
         exportacion_tag = etree.SubElement(
             owner,
@@ -606,11 +606,12 @@ class ComplementoAbono:
             
         complementos = etree.SubElement(owner, dte_ns + "Complementos")
 
+
+        NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0}"
+
         NSMAP_ = {
             "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0"
         }
-
-        NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0_GT_Complemento_Cambiaria-0.1.0.xsd}"
 
         complemento = etree.SubElement(
             complementos,
