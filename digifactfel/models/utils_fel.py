@@ -576,14 +576,15 @@ class AbonoFields:
         )
 
     def to_xml(self, owner):
+        NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0}"
         abono_tag = etree.SubElement(
             owner,
-            "Abono",
+            NS + "Abono",
         )
 
-        etree.SubElement(abono_tag, "NumeroAbono").text = str(self.numero_abono)
-        etree.SubElement(abono_tag, "FechaVencimiento").text = self.fecha_vencimiento
-        etree.SubElement(abono_tag, "MontoAbono").text = str(self.monto_abono)
+        etree.SubElement(abono_tag, NS + "NumeroAbono").text = str(self.numero_abono)
+        etree.SubElement(abono_tag, NS + "FechaVencimiento").text = self.fecha_vencimiento
+        etree.SubElement(abono_tag, NS + "MontoAbono").text = str(self.monto_abono)
 
 
 
@@ -596,35 +597,27 @@ class ComplementoAbono:
         return "Config: {}, Abonos: {}".format(self.config, self.abonos)
 
     def to_xml(self, owner, dte_ns):
-        props_complemento = {
-            "URIComplemento": self.config.uri_complemento,
-            "NombreComplemento": self.config.nombre_complemento,
-        }
-
-        if self.config.id_complemento:
-            props_complemento["IDComplemento"] = self.config.id_complemento
-            
         complementos = etree.SubElement(owner, dte_ns + "Complementos")
-
-
         NS = "{http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0}"
-
         attr_qname = etree.QName(
-                "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation"
-        )
+            "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation"
+        )   
 
-        NSMAP_ = {
-            "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0",             
-            "xsi": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd",
-        }
-        
-        props_complemento["xsi:schemaLocation"] = "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd"
+        NSMAP = {
+            "cfc": "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0",         
+            "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+        }         
 
         complemento = etree.SubElement(
             complementos,
             dte_ns + "Complemento",             
-            attrib=props_complemento,
-            nsmap=NSMAP_,             
+            {
+                attr_qname: "http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 GT_Complemento_Cambiaria-0.1.0.xsd",
+                "URIComplemento": self.config.uri_complemento,
+                "NombreComplemento": self.config.nombre_complemento,
+                "IDComplemento": self.config.id_complemento,
+            },
+            nsmap=NSMAP,             
         )
 
         abonos_factura_cambiaria = etree.SubElement(complemento,
@@ -950,7 +943,7 @@ class FEL:
                 response_json = response.json()
 
                 logging.info("response_json")
-                logging.info(response_json)
+                # logging.info(response_json)
 
                 if response_json:
                     codigo = response_json["Codigo"]
