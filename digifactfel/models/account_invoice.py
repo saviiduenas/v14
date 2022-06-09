@@ -213,7 +213,7 @@ class AccountMove(models.Model):
                     "CorreoEmisor": str(factura.company_id.email) or "",
                     "NITEmisor": str(nit_company),
                     "NombreComercial": factura.journal_id.feel_nombre_comercial,
-                    "NombreEmisor": factura.company_id.name,
+                    "NombreEmisor": factura.company_id.company_registry,
                 }
 
                 if tipo == "FPEQ":
